@@ -1,0 +1,112 @@
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        int start = 0;
+        int end = s.size() - 1;
+        int cnt = 0;
+        
+        while(start < end){
+            if(s[start] == s[end])
+            {
+				// if char matches increment start and decrement end
+                start++;
+                end--;
+            }
+            else
+            {
+				// keeping cnt of character that didn't match
+                cnt++;
+               start++;     //skip 1 from starting
+            }
+			// for optimising code if cnt is greater than 1 
+            // we will just break the loop as only one char can skipped/deleted.
+            if(cnt > 1)
+                break;
+        }
+        
+		// reinitialize pointer 
+        start = 0;
+        end = s.size() - 1;
+        int cnt1 = 0;
+        
+        while(start < end){
+            if(s[start] == s[end])
+            {
+				// if char matches increment start and decrement end
+                start++;
+                end--;  
+            }
+            else
+            {
+				// keeping cnt of character that didn't match
+                cnt1++;
+                end--;  //skip 1 from ending
+            }
+			// for optimising code if cnt is greater than 1 
+            // we will just break the loop as only one char can skipped/deleted.
+            if(cnt1 > 1)
+                break;
+               
+        }
+        
+        if(cnt == 1 || cnt1 == 1)   //del atmost one char
+            return true;
+        if(cnt == 0 || cnt1 == 0)    //palindrome
+            return true;
+        
+        return false;
+    }
+};
+
+-----------------------------------------------------------------------------------------------------
+
+SOLUTION -2 :=> Two Pointer
+
+class Solution {
+public:
+    bool validPalindrome(string s) {
+        int L=0,R = s.length()-1;
+        while(L<R) {
+            if(s[R--]!=s[L++]) {                
+                //case 1
+                int L1=L, R1=R+1;
+                while(L1<=R1) if(s[R1--]!=s[L1++]) break;
+                bool case1 = s[R1+1]==s[L1-1];
+                //case 2
+                int L2=L-1,R2=R;
+                while(L2<=R2) if(s[R2--]!=s[L2++]) break;
+                bool case2 = s[R2+1]==s[L2-1];
+				
+                return case1||case2;
+            }            
+        }
+        return true;
+    }
+};
+
+--------------------------------------------------------------------------------
+SOLUTION -3 =>Recursion
+
+class Solution {
+public:
+    bool flag = 0;
+    bool validPalindrome(string s) {
+        return helper(s, 0, s.size() - 1);
+    }
+    
+    bool helper(string &s, int l, int r) {
+        if(l >= r)
+            return true;
+        
+        // same
+        if(s[l] == s[r])
+            return helper(s, l+1, r-1);
+        // Not same for 2nd time
+        if(flag)
+            return false;
+        // not same for first time
+        flag = 1;
+        return helper(s, l+1, r) || helper(s, l, r-1);
+    }
+    
+};
